@@ -139,15 +139,34 @@ elif side_bar == "Predicting Delay":
      
     text,img2 = st.columns((2,1))
     with text:
-        st.title("SODP Regression Model")
-        st.markdown("Predicts exactly when the flight will get full")  
-        st.markdown("Trained on historical data from `2019-2021`") 
+        st.title("Predicting by how many minutes a flight will be delayed")
+        st.markdown("Trained on historical data from `2018-2021`") 
         st.markdown("Predicts `2022` flight") 
         st.write("")
         st.write("")
         
     with img2:
-        st.image("https://media.giphy.com/media/cNZQpCC8kY60gnnd0n/giphy.gif", width = 150)
+        st.image("https://media.giphy.com/media/fsDIB8vYY4Vq2OSVwt/giphy.gif", width = 150)
+        
+    st.write("We have identified that SouthWestern Airlines and Delta Airlines are the most \
+            popular and have maximum data available in the dataset.")
     
+    st.write("In this page, you can choose between these two airlines and \
+        use our model to predict by hom many minutes flights will get delayed all through out the year.")
+    
+    st.write("⚠️ Please note that these airlines have multiple flights going out on the same day\
+        So, predicted delay and actual delay are averaged.")
+    
+    options = ["Southwestern Airlines", "Delta Airlines"]
+    with st.form(key='airline_form'):
+        selected_option = st.selectbox("Select an Airline", options)
+        submit_button = st.form_submit_button(label='Submit')
+
+    if submit_button:
+        markdown_text = f" You have selected: `{selected_option}\n`"
+        st.sidebar.markdown(markdown_text)
+          
+          
+          
 elif side_bar == "📝Help: Regression":
     st.markdown("Blah")
