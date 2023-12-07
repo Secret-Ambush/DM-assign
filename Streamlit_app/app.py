@@ -200,7 +200,6 @@ elif side_bar == "Predicting Delay":
             df_notcancelled = df_test[df_test["Cancelled"] == False]
             df_notcancelled = df_notcancelled.drop('Cancelled', axis = 1)
             df_test = df_notcancelled[df_notcancelled["Diverted"] == False]
-            df_test = df_test.drop('Diverted', axis = 1)
             null_dep_time_count = df_test["DepTime"].isnull().sum()
             enc_nom_1 = (df_test.groupby('Origin').size()) / len(df_test)
             df_test['Origin_enc'] = df_test['Origin'].apply(lambda x : enc_nom_1[x])
@@ -223,7 +222,6 @@ elif side_bar == "Predicting Delay":
             df_notcancelled = df_test[df_test["Cancelled"] == False]
             df_notcancelled = df_notcancelled.drop('Cancelled', axis = 1)
             df_test = df_notcancelled[df_notcancelled["Diverted"] == False]
-            df_test = df_test.drop('Diverted', axis = 1)
             null_dep_time_count = df_test["DepTime"].isnull().sum()
             enc_nom_1 = (df_test.groupby('Origin').size()) / len(df_test)
             df_test['Origin_enc'] = df_test['Origin'].apply(lambda x : enc_nom_1[x])
