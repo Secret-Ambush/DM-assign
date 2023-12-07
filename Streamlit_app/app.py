@@ -7,7 +7,6 @@ import numpy as np
 import xgboost as xg
 from plotly_calplot import calplot
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 import time
 from streamlit_option_menu import option_menu
 from sklearn.metrics import r2_score
