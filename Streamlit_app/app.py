@@ -189,13 +189,13 @@ elif side_bar == "Predicting Delay":
         
         if selected_option == "Southwestern Airlines":
             if selected_option2 == "Linear Regression":
-                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/lr_sw.pkl')
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/lr_sw.pkl')
 
             if selected_option2 == "Random Forest":
-                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/rf_sw.pkl')
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/rf_sw.pkl')
             
             if selected_option2 == "XGBoost":
-                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/xgb_sw.pkl')
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_sw.pkl')
 
             df_test = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/southwest_test.csv")
             df_notcancelled = df_test[df_test["Cancelled"] == False]
