@@ -20,8 +20,8 @@ def fetch_flight_data(fltnumber):
         flight_data = pd.read_csv()
     return flight_data
 
-img = Image.open("airline.png")
-img2 = Image.open("airline2.png")
+img = Image.open("Streamlit_app/assets/airline.png")
+img2 = Image.open("Streamlit_app/assets/airline2.png")
 
 
 st.markdown(
