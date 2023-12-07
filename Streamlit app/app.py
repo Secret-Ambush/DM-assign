@@ -12,7 +12,7 @@ import plotly.graph_objects as go
 import time
 from streamlit_option_menu import option_menu
 
-#reading csv files
+#reading csv file
 @st.cache_data
 def fetch_flight_data(fltnumber):
     with st.spinner('Loading Data...'):
