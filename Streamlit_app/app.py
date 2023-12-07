@@ -146,13 +146,11 @@ if side_bar == 'About the dataset':
 elif side_bar == 'Analysis 🔎':
     col1, col2 = st.columns((5,5))       
     with col1:
-        st.markdown(""" ## Classification Model Documentation""")
+        st.markdown(""" ## Analysis of the dataset""")
     with col2:
         st.image("https://media.giphy.com/media/H1dXomvQ0jxNLASIqK/giphy.gif", width = 200)
         
-    st.markdown(""" 
-
-""")
+    st.markdown(""" """)
 
 elif side_bar == "Predicting Delay":  
      
