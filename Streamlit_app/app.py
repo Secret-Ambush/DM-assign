@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from PIL import Image  
 import pandas as pd
-import pickle
 from datetime import datetime, timedelta
 import numpy as np
 import xgboost as xg
@@ -14,6 +13,25 @@ from streamlit_option_menu import option_menu
 from sklearn.metrics import r2_score
 import plotly.io as pio
 import plotly.express as px
+import joblib
+import base64
+
+def sidebar_bg(side_bg):
+
+   side_bg_ext = 'jpg'
+
+   st.markdown(
+      f"""
+      <style>
+      [data-testid="stSidebar"] > div:first-child {{
+          background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
+      }}
+      </style>
+      """,
+      unsafe_allow_html=True,
+      )
+side_bg = '/Users/bristi/Desktop/DM assign/Streamlit_app/assets/Background_image2.jpeg'
+sidebar_bg(side_bg)
 
 #reading csv file
 @st.cache_data
@@ -123,10 +141,8 @@ if side_bar == 'About the dataset':
             ```
             '''
             st.markdown(markdown_text)
-            st.write("")
-        
-        
-               
+            st.write("")    
+
 elif side_bar == 'Analysis 🔎':
     col1, col2 = st.columns((5,5))       
     with col1:
@@ -137,6 +153,7 @@ elif side_bar == 'Analysis 🔎':
     st.markdown(""" 
 
 """)
+
 elif side_bar == "Predicting Delay":  
      
     text,img2 = st.columns((2,1))
@@ -160,35 +177,44 @@ elif side_bar == "Predicting Delay":
         So, predicted delay and actual delay are averaged.")
     
     options = ["Southwestern Airlines", "Delta Airlines"]
+    options2 = ["Linear Regression", "Random Forest", "XGBoost"]
     with st.form(key='airline_form'):
         selected_option = st.selectbox("Select an Airline", options)
+        selected_option2 = st.selectbox("Select a Model: ", options2)
         submit_button = st.form_submit_button(label='Submit')
 
     if submit_button:
-        markdown_text = f" You have selected: `{selected_option}\n`"
+        markdown_text = f" Airline selected: `{selected_option}\n`"
         st.sidebar.markdown(markdown_text)
+        markdown_text = f" Model selected: `{selected_option2}\n`"
+        st.sidebar.markdown(markdown_text)
+        st.session_state["stage"] = "Southwestern_Airlines"
         
         if selected_option == "Southwestern Airlines":
-            df_test = pd.read_csv("/Users/bristi/Desktop/Preprocessing/southwest_test.csv")
+            if selected_option2 == "Linear Regression":
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/lr_sw.pkl')
+
+            if selected_option2 == "Random Forest":
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/rf_sw.pkl')
+            
+            if selected_option2 == "XGBoost":
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/xgb_sw.pkl')
+
+            df_test = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/southwest_test.csv")
             df_notcancelled = df_test[df_test["Cancelled"] == False]
             df_notcancelled = df_notcancelled.drop('Cancelled', axis = 1)
             df_test = df_notcancelled[df_notcancelled["Diverted"] == False]
             df_test = df_test.drop('Diverted', axis = 1)
             null_dep_time_count = df_test["DepTime"].isnull().sum()
-            print("Number of records with null DepTime:", null_dep_time_count)
-            df_test = df_test.drop("Airline", axis=1)
             enc_nom_1 = (df_test.groupby('Origin').size()) / len(df_test)
             df_test['Origin_enc'] = df_test['Origin'].apply(lambda x : enc_nom_1[x])
             enc_nom_2 = (df_test.groupby('Dest').size()) / len(df_test)
             df_test['Dest_enc'] = df_test['Dest'].apply(lambda x : enc_nom_2[x])
             X_test = df_test[['DepDelayMinutes', 'TaxiOut', 'TaxiIn', 'ArrTime', 'Distance']]
             y_test = df_test[['ArrDelayMinutes']]
-            
-            #call model here
-            
-            pred = best_rf.predict(X_test)
+                    
+            pred = loaded_model.predict(X_test)
             r2score = r2_score(y_test, pred)
-            print("R2 Score:", r2score)
             
             # visualisation
             
@@ -196,7 +222,6 @@ elif side_bar == "Predicting Delay":
             actual = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), y_test.reset_index(drop=True)], axis=1)
 
             predicted = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), pred.reset_index(drop=True)], axis=1)
-            predicted
 
             df5 = predicted
             average_values = df5.groupby('FlightDate')[0].mean().reset_index()
@@ -229,7 +254,6 @@ elif side_bar == "Predicting Delay":
             final_actual = pd.concat([final_actual, missing_data])
             final_actual = final_actual.sort_values('FlightDate').reset_index(drop=True)
             
-
             fig1 = calplot(
                 final_actual, 
                 x= "FlightDate", 
@@ -262,7 +286,7 @@ elif side_bar == "Predicting Delay":
             final_predicted = pd.concat([final_predicted, missing_data])
 
             final_predicted = final_predicted.sort_values('FlightDate').reset_index(drop=True)
-            final_predicted
+            
             fig2 = calplot(
                 final_predicted, 
                 x= "FlightDate", 
