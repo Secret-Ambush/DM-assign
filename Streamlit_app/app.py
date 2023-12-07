@@ -11,7 +11,9 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import time
 from streamlit_option_menu import option_menu
-
+from sklearn.metrics import r2_score
+import plotly.io as pio
+import plotly.express as px
 
 #reading csv file
 @st.cache_data
@@ -165,8 +167,161 @@ elif side_bar == "Predicting Delay":
     if submit_button:
         markdown_text = f" You have selected: `{selected_option}\n`"
         st.sidebar.markdown(markdown_text)
-          
-          
+        
+        if selected_option == "Southwestern Airlines":
+            df_test = pd.read_csv("/Users/bristi/Desktop/Preprocessing/southwest_test.csv")
+            df_notcancelled = df_test[df_test["Cancelled"] == False]
+            df_notcancelled = df_notcancelled.drop('Cancelled', axis = 1)
+            df_test = df_notcancelled[df_notcancelled["Diverted"] == False]
+            df_test = df_test.drop('Diverted', axis = 1)
+            null_dep_time_count = df_test["DepTime"].isnull().sum()
+            print("Number of records with null DepTime:", null_dep_time_count)
+            df_test = df_test.drop("Airline", axis=1)
+            enc_nom_1 = (df_test.groupby('Origin').size()) / len(df_test)
+            df_test['Origin_enc'] = df_test['Origin'].apply(lambda x : enc_nom_1[x])
+            enc_nom_2 = (df_test.groupby('Dest').size()) / len(df_test)
+            df_test['Dest_enc'] = df_test['Dest'].apply(lambda x : enc_nom_2[x])
+            X_test = df_test[['DepDelayMinutes', 'TaxiOut', 'TaxiIn', 'ArrTime', 'Distance']]
+            y_test = df_test[['ArrDelayMinutes']]
+            
+            #call model here
+            
+            pred = best_rf.predict(X_test)
+            r2score = r2_score(y_test, pred)
+            print("R2 Score:", r2score)
+            
+            # visualisation
+            
+            pred = pd.DataFrame(pred)
+            actual = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), y_test.reset_index(drop=True)], axis=1)
+
+            predicted = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), pred.reset_index(drop=True)], axis=1)
+            predicted
+
+            df5 = predicted
+            average_values = df5.groupby('FlightDate')[0].mean().reset_index()
+            average_values.rename(columns={0: 'Average_ArrivalDelay'}, inplace=True)
+            merged_df = pd.merge(df5, average_values, on='FlightDate', how='left')
+            final_predicted = merged_df.drop_duplicates(subset='FlightDate')
+            final_predicted = final_predicted.drop([0], axis=1)
+            final_predicted = final_predicted.sort_values(by='FlightDate', ascending=True)
+            
+            # Average actual delay of flights on a single day
+            df6 = actual
+            average_values = df6.groupby('FlightDate')['ArrDelayMinutes'].mean().reset_index()
+            average_values.rename(columns={'ArrDelayMinutes': 'Average_ArrivalDelay'}, inplace=True)
+            merged_df = pd.merge(df6, average_values, on='FlightDate', how='left')
+            final_actual = merged_df.drop_duplicates(subset='FlightDate')
+            final_actual = final_actual.drop(['ArrDelayMinutes'], axis=1)
+            final_actual = final_actual.sort_values(by='FlightDate', ascending=True)
+
+            start_date = '2022-08-01'
+            end_date = '2022-12-31'
+
+            missing_dates = pd.date_range(start=start_date, end=end_date, freq='D')
+            missing_data = pd.DataFrame({
+                'FlightDate': missing_dates,
+                'Average_ArrivalDelay': -1
+            })
+
+            final_actual['FlightDate'] = pd.to_datetime(final_actual['FlightDate'])
+            missing_data['FlightDate'] = pd.to_datetime(missing_data['FlightDate'])
+            final_actual = pd.concat([final_actual, missing_data])
+            final_actual = final_actual.sort_values('FlightDate').reset_index(drop=True)
+            
+
+            fig1 = calplot(
+                final_actual, 
+                x= "FlightDate", 
+                y = "Average_ArrivalDelay",
+                dark_theme=False,
+                years_title=True,
+                gap=1,
+                name="ArrDelayMinutes",
+                month_lines_width=2, 
+                month_lines_color="black",
+                colorscale="magma",
+                showscale=True,
+                cmap_max=69,
+                cmap_min= 0
+                )
+
+            final_actual['FlightDate'] = pd.to_datetime(final_actual['FlightDate'])
+            date_formatted = final_actual['FlightDate'].dt.strftime('%Y-%m-%d')
+
+            fig1.update_layout(title_text=f'<b>Actual Average ArrivalDelay for flights</b>')
+            fig1.update_layout(width=800)
+
+
+            st.plotly_chart(fig1)
+            st.write("")
+            
+            final_predicted['FlightDate'] = pd.to_datetime(final_predicted['FlightDate'])
+            missing_data['FlightDate'] = pd.to_datetime(missing_data['FlightDate'])
+
+            final_predicted = pd.concat([final_predicted, missing_data])
+
+            final_predicted = final_predicted.sort_values('FlightDate').reset_index(drop=True)
+            final_predicted
+            fig2 = calplot(
+                final_predicted, 
+                x= "FlightDate", 
+                y = "Average_ArrivalDelay",
+                dark_theme=False,
+                years_title=True,
+                gap=1,
+                name="ArrDelayMinutes",
+                month_lines_width=2, 
+                month_lines_color="black",
+                colorscale="magma",
+                showscale=True,
+                cmap_max=69,
+                cmap_min= 0
+                )
+
+            final_predicted['FlightDate'] = pd.to_datetime(final_predicted['FlightDate'])
+            date_formatted = final_predicted['FlightDate'].dt.strftime('%Y-%m-%d')
+
+            fig2.update_layout(title_text=f'<b>Predicted Average ArrivalDelay for flights</b>')
+            fig2.update_layout(width=800)
+
+            st.plotly_chart(fig2)
+            st.write("")
+            
+            final_diff = final_predicted
+            final_diff['Average_ArrivalDelay'] = final_predicted['Average_ArrivalDelay'] - final_actual['Average_ArrivalDelay']
+
+            fig3 = calplot(
+                final_diff, 
+                x= "FlightDate", 
+                y = "Average_ArrivalDelay",
+                dark_theme=False,
+                years_title=True,
+                gap=1,
+                name="ArrDelayMinutes",
+                month_lines_width=2, 
+                month_lines_color="black",
+                colorscale="magma",
+                showscale=True
+                # cmap_max= 2,
+                # cmap_min= -60
+                )
+
+            final_diff['FlightDate'] = pd.to_datetime(final_diff['FlightDate'])
+            date_formatted = final_diff['FlightDate'].dt.strftime('%Y-%m-%d')
+
+            fig3.update_layout(title_text=f'<b>Delta Average ArrivalDelay for flights</b>')
+            fig3.update_layout(width=800)
+
+            st.plotly_chart(fig3)
+            st.write("")
+            
+
+            fig4 = px.scatter(final_diff, x='FlightDate', y='Average_ArrivalDelay', title='Arrival Delay vs Flight Date')
+            fig4.update_layout(xaxis_title='Flight Date', yaxis_title='Average Arrival Delay')
+
+            st.plotly_chart(fig4)
+            st.write("")
           
 elif side_bar == "📝Help: Regression":
     st.markdown("Blah")
