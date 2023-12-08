@@ -41,6 +41,7 @@ def fetch_flight_data(fltnumber):
             flight_data = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/delta_test.csv")
     return flight_data
 
+@st.cache_resource
 def get_pyg_renderer() -> "StreamlitRenderer":
     df = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/Combined_Flights_2022.csv")
     return StreamlitRenderer(df, spec="./gw_config.json", debug=False)
@@ -153,7 +154,8 @@ if side_bar == 'About the dataset':
             st.write("")    
 
 elif side_bar == 'Analysis 🔎':
-    st.write("Using PyGWalker to perform EDA on 2022 dataset")
+    st.title("Analysing Flight Data 2022")
+    st.write("Using PyGWalker to perform EDA on the combined flights dataset")
     st.write("")
     
     renderer = get_pyg_renderer()
