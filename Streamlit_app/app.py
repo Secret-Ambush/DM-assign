@@ -2,15 +2,9 @@ import streamlit as st
 import pandas as pd
 from PIL import Image  
 import pandas as pd
-from datetime import datetime, timedelta
-import numpy as np
-import xgboost as xg
 from plotly_calplot import calplot
-import matplotlib.pyplot as plt
 import time
-from streamlit_option_menu import option_menu
 from sklearn.metrics import r2_score
-import plotly.io as pio
 import plotly.express as px
 import joblib
 import base64
