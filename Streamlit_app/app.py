@@ -62,7 +62,7 @@ st.markdown(
 st.sidebar.title("Delay Prediction + Flight Analysis")
 st.sidebar.image("https://media.giphy.com/media/KenFWffodaDVaceDa6/giphy.gif",width = 100)
 st.sidebar.markdown("")
-side_bar = st.sidebar.radio('What would you like to view?', [ 'About the dataset', 'Analysis 🔎', 'Predicting Delay'])
+side_bar = st.sidebar.radio('What would you like to view?', [ 'About the dataset', 'Analysis 🔎', 'Predicting Delay','About the model'])
 
 if side_bar == 'About the dataset':
     header = st.container()
@@ -152,13 +152,9 @@ if side_bar == 'About the dataset':
             st.write("")    
 
 elif side_bar == 'Analysis 🔎':
-    col1, col2 = st.columns((5,5))       
-    with col1:
-        st.markdown(""" ## Analysis of the dataset""")
-    with col2:
-        st.image("https://media.giphy.com/media/H1dXomvQ0jxNLASIqK/giphy.gif", width = 200)
-        
-    st.markdown(""" """)
+    st.write("Using PyGWalker to perform EDA on 2022 dataset")
+    st.write("")
+    
 
 elif side_bar == "Predicting Delay":  
      
@@ -373,3 +369,8 @@ elif side_bar == "Predicting Delay":
 
         st.plotly_chart(fig4)
         st.write("")
+
+elif side_bar == "About the model":
+    st.title("Behind the Prediction")
+    st.markdown("## Feature Selection: ")
+    st.write("Correlation matrix of the final selected features: ")
