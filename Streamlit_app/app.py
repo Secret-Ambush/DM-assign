@@ -29,6 +29,7 @@ def sidebar_bg(side_bg):
       """,
       unsafe_allow_html=True,
       )
+   
 side_bg = '/Users/bristi/Desktop/DM assign/Streamlit_app/assets/Background_image2.jpeg'
 sidebar_bg(side_bg)
 
@@ -37,7 +38,10 @@ sidebar_bg(side_bg)
 def fetch_flight_data(fltnumber):
     with st.spinner('Loading Data...'):
         time.sleep(0.5)
-        flight_data = pd.read_csv()
+        if fltnumber == 1:
+            flight_data = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/southwest_test.csv")
+        else:
+            flight_data = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/delta_test.csv")
     return flight_data
 
 img = Image.open("/Users/bristi/Desktop/DM assign/Streamlit_app/assets/airline.png")
@@ -196,7 +200,7 @@ elif side_bar == "Predicting Delay":
             if selected_option2 == "XGBoost":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_delta.pkl')
                 
-            df_test = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/southwest_test.csv")
+            df_test = fetch_flight_data(0)
             df_notcancelled = df_test[df_test["Cancelled"] == False]
             df_notcancelled = df_notcancelled.drop('Cancelled', axis = 1)
             df_test = df_notcancelled[df_notcancelled["Diverted"] == False]
@@ -218,7 +222,7 @@ elif side_bar == "Predicting Delay":
             if selected_option2 == "XGBoost":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_sw.pkl')
 
-            df_test = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/southwest_test.csv")
+            df_test = fetch_flight_data(1)
             df_notcancelled = df_test[df_test["Cancelled"] == False]
             df_notcancelled = df_notcancelled.drop('Cancelled', axis = 1)
             df_test = df_notcancelled[df_notcancelled["Diverted"] == False]
