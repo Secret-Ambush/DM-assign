@@ -14,6 +14,9 @@ import plotly.io as pio
 import plotly.express as px
 import joblib
 import base64
+from pygwalker.api.streamlit import StreamlitRenderer, init_streamlit_comm
+
+init_streamlit_comm()
 
 def sidebar_bg(side_bg):
 
@@ -43,6 +46,10 @@ def fetch_flight_data(fltnumber):
         else:
             flight_data = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/delta_test.csv")
     return flight_data
+
+def get_pyg_renderer() -> "StreamlitRenderer":
+    df = pd.read_csv("/Users/bristi/Desktop/DM assign/Preprocessing/Combined_Flights_2022.csv")
+    return StreamlitRenderer(df, spec="./gw_config.json", debug=False)
 
 img = Image.open("/Users/bristi/Desktop/DM assign/Streamlit_app/assets/airline.png")
 img2 = Image.open("/Users/bristi/Desktop/DM assign/Streamlit_app/assets/airline2.png")
@@ -155,6 +162,8 @@ elif side_bar == 'Analysis 🔎':
     st.write("Using PyGWalker to perform EDA on 2022 dataset")
     st.write("")
     
+    renderer = get_pyg_renderer()
+    renderer.render_explore()
 
 elif side_bar == "Predicting Delay":  
      
@@ -196,7 +205,7 @@ elif side_bar == "Predicting Delay":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/delta_LR.pkl')
 
             if selected_option2 == "Random Forest":
-                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/rf_sw.pkl')
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/rf_delta.pkl')
             
             if selected_option2 == "XGBoost":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_delta.pkl')
