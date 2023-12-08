@@ -376,6 +376,47 @@ elif side_bar == "Predicting Delay":
         st.write("")
 
 elif side_bar == "About the model":
-    st.title("Behind the Prediction")
-    st.markdown("## Feature Selection: ")
-    st.write("Correlation matrix of the final selected features: ")
+    st.title("About the model")
+    markdown2='''
+    The model built in this project helps us predict the delay in the arrival of two airlines mainly - Southwest Airlines and Delta airlines.
+    The dataset for the model has been derived from Kaggle. The model has been trained on the 2018-2021 datasets for both the airlines and for testing the 
+    2022 dataset has been used for both the airlines. 
+    
+    The features for building the model has been derived from the respective original datasets using `Random Forest feature selection.` 
+    
+    Using this technique the different features obtained for the Delta Airlines are:
+    - DepDelayMinutes: The delay in departure time in minutes (float)
+    - TaxiOut: Time taken for taxiing out from the departure airport.
+    - TaxiIn: Time taken for taxiing in after arrival.
+    - Distance: To analyze if longer flights tend to have more delays.
+    - ArrTime: The actual arrival time (in float format).
+    - Origin_enc: The code or name of the origin airport(encoded).
+    - CRSArrTime: The scheduled arrival time.
+    - DayofMonth: The day of the month when the flight occurred.
+    - DepTime: The actual departure time (in float format).
+    
+    Similarly the set of features obtained for Southwest Airlines:
+    - DepDelayMinutes: The delay in departure time in minutes (float).
+    - TaxiOut: Time taken for taxiing out from the departure airport.
+    - TaxiIn: Time taken for taxiing in after arrival.
+    - ArrTime: The actual arrival time (in float format).
+    - Distance: The distance traveled by the flight (in float format).
+    
+    These features are then used to train the model so as to predict `ArrDelayMinutes` for both airlines. 
+    
+    Moreover, these features have also been used to build a `correlation matrix` which shows the dependancies or the correlations 
+    of different features. It has been ensured that 
+    
+    '''
+    st.markdown(markdown2)
+    img6 = Image.open("/Users/bristi/Desktop/DM assign/Streamlit_app/assets/newplot.png")
+    st.image(img6, caption=" ", use_column_width=True)
+    st.write("")
+    
+    markdown3= '''
+    Moving On,these features have been used to build three models for the both the airlines namely, Regression, XGBoost and Random Forest Regression.
+    Out of these three models, Random Forest Regression has proven to be a better performing model for both the airlines after Hyperparameter tuning 
+    by giving an r2 value of 0.96 for the Southwest Airlines and 0.98 for the delta Airlines.
+'''
+    st.markdown(markdown3)
+    st.write("")
