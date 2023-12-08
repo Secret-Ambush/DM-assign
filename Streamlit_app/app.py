@@ -60,9 +60,9 @@ st.markdown(
 )   
 
 st.sidebar.title("Delay Prediction + Flight Analysis")
-st.sidebar.image(img2,width = 100)
+st.sidebar.image("https://media.giphy.com/media/KenFWffodaDVaceDa6/giphy.gif",width = 100)
 st.sidebar.markdown("")
-side_bar = st.sidebar.radio('What would you like to view?', [ 'About the dataset', 'Analysis 🔎', 'Predicting Delay', 'Help: Regression📝'])
+side_bar = st.sidebar.radio('What would you like to view?', [ 'About the dataset', 'Analysis 🔎', 'Predicting Delay'])
 
 if side_bar == 'About the dataset':
     header = st.container()
@@ -72,9 +72,14 @@ if side_bar == 'About the dataset':
         
         text_col,image_col = st.columns((5.5,1))
         
+        with image_col:
+            st.write("")
+            st.image(img, width = 150)
         with text_col:
             st.title("Understanding the Dataset")
             st.markdown("The dataset contains information of American Airlines from 2018 - 2022.")
+            st.write("")
+            
             markdown_text = '''
             ```
             Data columns (total 61 columns):
@@ -368,6 +373,3 @@ elif side_bar == "Predicting Delay":
 
         st.plotly_chart(fig4)
         st.write("")
-          
-elif side_bar == "📝Help: Regression":
-    st.markdown("Blah")
