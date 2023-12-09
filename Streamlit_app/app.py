@@ -184,7 +184,7 @@ elif side_bar == "Predicting Delay":
         So, predicted delay and actual delay are averaged.")
     
     options = ["Southwestern Airlines", "Delta Airlines"]
-    options2 = ["Linear Regression", "Random Forest", "XGBoost"]
+    options2 = ["Linear Regression", "Random Forest", "Decision Tree", "XGBoost" ]
     with st.form(key='airline_form'):
         selected_option = st.selectbox("Select an Airline", options)
         selected_option2 = st.selectbox("Select a Model: ", options2)
@@ -203,6 +203,9 @@ elif side_bar == "Predicting Delay":
             if selected_option2 == "Random Forest":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/rf_delta.pkl')
             
+            if selected_option2 == "Decision Tree":
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_delta.pkl')
+             
             if selected_option2 == "XGBoost":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_delta.pkl')
                 
@@ -217,7 +220,6 @@ elif side_bar == "Predicting Delay":
             df_test['Dest_enc'] = df_test['Dest'].apply(lambda x : enc_nom_2[x])
             X_test = df_test[['DepDelayMinutes', 'TaxiOut','TaxiIn','Distance','ArrTime','Origin_enc','CRSArrTime','DayofMonth','DepTime']]
 
-        
         if selected_option == "Southwestern Airlines":
             if selected_option2 == "Linear Regression":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/lr_sw.pkl')
@@ -225,6 +227,9 @@ elif side_bar == "Predicting Delay":
             if selected_option2 == "Random Forest":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/rf_sw.pkl')
             
+            if selected_option2 == "Decision Tree":
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/dt_sw.pkl')
+             
             if selected_option2 == "XGBoost":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_sw.pkl')
 
