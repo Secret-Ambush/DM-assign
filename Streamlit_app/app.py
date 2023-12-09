@@ -204,7 +204,7 @@ elif side_bar == "Predicting Delay":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Preprocessing/rf_delta.pkl')
             
             if selected_option2 == "Decision Tree":
-                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_delta.pkl')
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/dt_delta.pkl')
              
             if selected_option2 == "XGBoost":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_delta.pkl')
@@ -218,7 +218,7 @@ elif side_bar == "Predicting Delay":
             df_test['Origin_enc'] = df_test['Origin'].apply(lambda x : enc_nom_1[x])
             enc_nom_2 = (df_test.groupby('Dest').size()) / len(df_test)
             df_test['Dest_enc'] = df_test['Dest'].apply(lambda x : enc_nom_2[x])
-            X_test = df_test[['DepDelayMinutes', 'TaxiOut','TaxiIn','Distance','ArrTime','Origin_enc','CRSArrTime','DayofMonth','DepTime']]
+            X_test = df_test[['DepDelayMinutes', 'TaxiOut', 'TaxiIn', 'Distance', 'ArrTime', 'Origin_enc', 'CRSArrTime', 'DayofMonth', 'DepTime']]
 
         if selected_option == "Southwestern Airlines":
             if selected_option2 == "Linear Regression":
