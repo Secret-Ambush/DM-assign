@@ -417,7 +417,7 @@ elif side_bar == "About the model":
     
     markdown3= '''
     Moving on, these features have been used to build four models for the both the airlines namely, `Linear Regression`, `XGBoost`, `Decision Tree Regression` and `Random Forest Regression`.
-    Out of these four models, `Random Forest Regression` has proven to be a better performing model for both the airlines after Hyperparameter tuning giving an r2 value of `0.967` for the Southwest Airlines and `0.985` for the delta Airlines.
+    Out of these four models, `Random Forest Regression` has proven to be a better performing model for both the airlines after Hyperparameter tuning giving an r2 value of `0.967` for Southwest Airlines and `0.985` for Delta Airlines.
 '''
     st.markdown(markdown3)
     st.write("")
