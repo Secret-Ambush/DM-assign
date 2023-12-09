@@ -180,7 +180,7 @@ elif side_bar == "Predicting Delay":
     st.write("In this page, you can choose between these two airlines and \
         use our model to predict by hom many minutes flights will get delayed all through out the year.")
     
-    st.write("⚠️ Please note that these airlines have multiple flights going out on the same day\
+    st.write("⚠️ Please note that these airlines have multiple flights going out on the same day.\
         So, predicted delay and actual delay are averaged.")
     
     options = ["Southwestern Airlines", "Delta Airlines"]
