@@ -241,12 +241,14 @@ elif side_bar == "Predicting Delay":
             y_test = df_test['ArrDelayMinutes']
                     
         pred = loaded_model.predict(X_test)
-        r2score = r2_score(y_test, pred)
-        st.write(r2score)
-        # visualisation
+        r2 = r2_score(y_test, pred)
+        markdown_text = f" R2 Score: `{r2}\n`"
+        st.write("")
+        st.markdown(markdown_text)
+        st.write("")
         
+        # visualisation
         pred = pd.DataFrame(pred)
-        st.dataframe(pred)
         actual = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), y_test.reset_index(drop=True)], axis=1)
 
         predicted = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), pred.reset_index(drop=True)], axis=1)
