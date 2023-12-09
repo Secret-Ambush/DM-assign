@@ -219,10 +219,11 @@ elif side_bar == "Predicting Delay":
             enc_nom_2 = (df_test.groupby('Dest').size()) / len(df_test)
             df_test['Dest_enc'] = df_test['Dest'].apply(lambda x : enc_nom_2[x])
             X_test = df_test[['DepDelayMinutes', 'TaxiOut', 'TaxiIn', 'Distance', 'ArrTime', 'Origin_enc', 'CRSArrTime', 'DayofMonth', 'DepTime']]
-
+            y_test = df_test['ArrDelayMinutes']
+            
         if selected_option == "Southwestern Airlines":
             if selected_option2 == "Linear Regression":
-                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/lr_sw.pkl')
+                loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/linearReg_southwest.pkl')
 
             if selected_option2 == "Random Forest":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/rf_sw.pkl')
@@ -232,26 +233,20 @@ elif side_bar == "Predicting Delay":
              
             if selected_option2 == "XGBoost":
                 loaded_model = joblib.load('/Users/bristi/Desktop/DM assign/Streamlit_app/assets/xgb_sw.pkl')
-
+            
             df_test = fetch_flight_data(1)
             df_notcancelled = df_test[df_test["Cancelled"] == False]
-            df_notcancelled = df_notcancelled.drop('Cancelled', axis = 1)
             df_test = df_notcancelled[df_notcancelled["Diverted"] == False]
-            null_dep_time_count = df_test["DepTime"].isnull().sum()
-            enc_nom_1 = (df_test.groupby('Origin').size()) / len(df_test)
-            df_test['Origin_enc'] = df_test['Origin'].apply(lambda x : enc_nom_1[x])
-            enc_nom_2 = (df_test.groupby('Dest').size()) / len(df_test)
-            df_test['Dest_enc'] = df_test['Dest'].apply(lambda x : enc_nom_2[x])
             X_test = df_test[['DepDelayMinutes', 'TaxiOut', 'TaxiIn', 'ArrTime', 'Distance']]
-
-        y_test = df_test[['ArrDelayMinutes']]
+            y_test = df_test['ArrDelayMinutes']
                     
         pred = loaded_model.predict(X_test)
         r2score = r2_score(y_test, pred)
-        
+        st.write(r2score)
         # visualisation
         
         pred = pd.DataFrame(pred)
+        st.dataframe(pred)
         actual = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), y_test.reset_index(drop=True)], axis=1)
 
         predicted = pd.concat([ df_test[['FlightDate']].reset_index(drop=True), pred.reset_index(drop=True)], axis=1)
