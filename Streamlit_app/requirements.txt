@@ -150,7 +150,7 @@ jupyterlab-widgets==3.0.7
 jupyterlab_server==2.19.0
 keras==2.13.1
 kiwisolver==1.4.4
-langchain==0.0.285
+langchain==0.2.5
 langsmith==0.0.35
 lazy-object-proxy==1.8.0
 libclang==16.0.6
